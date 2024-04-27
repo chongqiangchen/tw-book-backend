@@ -1,0 +1,33 @@
+version: '3'
+services:
+  app:
+    image: tw/book-app:1
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - /Users/mt/data/book
+    restart: always
+    ports:
+      - "8083:8080"
+    depends_on:
+      - mysql
+  mysql:
+    container_name: tw-mysql
+    image: mysql:latest
+    command:
+      - --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: 'tw_book'
+      MYSQL_ROOT_PASSWORD: '123456'
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - "3307:3306"
+    restart: always
+    volumes:
+      - type: volume
+        source: db-data
+        target: /Users/mt/data/tw-mysql
+volumes:
+  db-data:
+    driver: local

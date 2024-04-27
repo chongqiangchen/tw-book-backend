@@ -59,9 +59,9 @@ jobs:
             fi
             
             if [ ! -d "./repo-directory" ]; then
-              git clone https://github.com/your-username/your-repository.git ./repo-directory
+              git clone git@github.com:chongqiangchen/tw-book-backend.git ./tw-book-backend
             else
-              cd ./repo-directory
+              cd ./tw-book-backend
               git pull
             fi
             cd ./repo-directory

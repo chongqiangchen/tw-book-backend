@@ -70,5 +70,6 @@ jobs:
             echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
       
             # Pull the latest images and start the containers
+            docker-compose -f docker-compose.yml down
             docker-compose -f docker-compose.yml pull
             docker-compose -f docker-compose.yml up -d

@@ -58,13 +58,13 @@ jobs:
               sudo chmod +x /usr/local/bin/docker-compose
             fi
             
-            if [ ! -d "./repo-directory" ]; then
-              git clone git@github.com:chongqiangchen/tw-book-backend.git ./tw-book-backend
+            if [ ! -d "./tw-book-backend" ]; then
+              git clone https://github.com/chongqiangchen/tw-book-backend.git ./tw-book-backend
             else
               cd ./tw-book-backend
               git pull
             fi
-            cd ./repo-directory
+            cd ./tw-book-backend
       
             # Login to Docker Hub
             echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin

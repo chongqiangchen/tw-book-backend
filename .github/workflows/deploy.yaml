@@ -34,8 +34,7 @@ jobs:
           docker-compose -f docker-compose.yml build app
           docker-compose -f docker-compose.yml push app
 
-      # 如果您想在远程服务器上部署
-      - name: Deploy to server (Optional)
+      - name: Deploy to server
         if: success()  # Only run if the previous steps were successful
         uses: appleboy/ssh-action@master
         with:
@@ -43,6 +42,25 @@ jobs:
           username: root
           key: ${{ secrets.REMOTE_SERVER_SSH_KEY }}
           script: |
-            docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+            # Check if Docker is installed and install it if not
+            if ! command -v docker &> /dev/null; then
+              echo "Installing Docker..."
+              curl -fsSL https://get.docker.com -o get-docker.sh
+              sudo sh get-docker.sh
+              sudo usermod -aG docker $USER
+              newgrp docker
+            fi
+      
+            # Check if Docker Compose is installed and install it if not
+            if ! command -v docker-compose &> /dev/null; then
+              echo "Installing Docker Compose..."
+              sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+              sudo chmod +x /usr/local/bin/docker-compose
+            fi
+      
+            # Login to Docker Hub
+            echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+      
+            # Pull the latest images and start the containers
             docker-compose -f docker-compose.yml pull
             docker-compose -f docker-compose.yml up -d

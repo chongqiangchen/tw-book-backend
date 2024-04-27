@@ -31,8 +31,8 @@ jobs:
 
       - name: Build and push Docker images
         run: |
-          docker-compose -f docker-compose.yml build
-          docker-compose -f docker-compose.yml push
+          docker-compose -f docker-compose.yml build app
+          docker-compose -f docker-compose.yml push app
 
       # 如果您想在远程服务器上部署
       - name: Deploy to server (Optional)
